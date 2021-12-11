@@ -43,6 +43,10 @@ class StoryMenuState extends MusicBeatState
 		var weekFile;
 		weekList = CoolUtil.coolTextFile(Paths.txt('data/weekList'));
 
+		weekNames = [];
+		weekData = [];
+		weekCharacters = [];
+
 		for (i in 0...weekList.length)
 		{
 			weekFile = weekList[i];
