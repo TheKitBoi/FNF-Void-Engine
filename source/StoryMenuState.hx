@@ -1,5 +1,6 @@
 package;
 
+import polymod.util.DefineUtil;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -19,39 +20,66 @@ import Discord.DiscordClient;
 
 using StringTools;
 
+typedef WeekData =
+{
+	var name:String;
+	var weekCharacters:Array<String>;
+	var songs:Array<String>;
+}
+
 class StoryMenuState extends MusicBeatState
 {
 	var scoreText:FlxText;
 
-	static function weekData():Array<Dynamic>
+	// static function weekData():Array<Dynamic>
+	// {
+	// 	return [
+	// 		['tutorial'],
+	// 		['bopeebo', 'fresh', 'dadbattle'],
+	// 		['spookeez', 'south', "monster"],
+	// 		['pico', 'philly', "blammed"],
+	// 		['satin-panties', "high", "milf"],
+	// 		['cocoa', 'eggnog', 'winter-horrorland'],
+	// 		['senpai', 'roses', 'thorns']
+	// 	];
+	// }
+	static var weekData:Array<Dynamic> = [];
+
+	static var weekNames:Array<String> = [];
+	static var weekList:Array<String> = [];
+
+	static var weekCharacters:Array<Dynamic> = [];
+
+	static function weekStuff()
 	{
-		return [
-			['tutorial'],
-			['bopeebo', 'fresh', 'dadbattle'],
-			['spookeez', 'south', "monster"],
-			['pico', 'philly', "blammed"],
-			['satin-panties', "high", "milf"],
-			['cocoa', 'eggnog', 'winter-horrorland'],
-			['senpai', 'roses', 'thorns']
-		];
+		var weekFile;
+		weekList = CoolUtil.coolTextFile(Paths.txt('data/weekList'));
+
+		for (i in 0...weekList.length)
+		{
+			weekFile = weekList[i];
+
+			var rawJson:WeekData = cast Paths.loadJSON('weeks/$weekFile');
+
+			weekNames.push(rawJson.name);
+			weekData.push(rawJson.songs);
+			weekCharacters.push(rawJson.weekCharacters);
+		}
 	}
 
 	var curDifficulty:Int = 1;
 
 	public static var weekUnlocked:Array<Bool> = [];
 
-	var weekCharacters:Array<Dynamic> = [
-		['', 'bf', 'gf'],
-		['dad', 'bf', 'gf'],
-		['spooky', 'bf', 'gf'],
-		['pico', 'bf', 'gf'],
-		['mom', 'bf', 'gf'],
-		['parents-christmas', 'bf', 'gf'],
-		['senpai', 'bf', 'gf']
-	];
-
-	var weekNames:Array<String> = CoolUtil.coolTextFile(Paths.txt('data/weekNames'));
-
+	// var weekCharacters:Array<Dynamic> = [
+	// 	['', 'bf', 'gf'],
+	// 	['dad', 'bf', 'gf'],
+	// 	['spooky', 'bf', 'gf'],
+	// 	['pico', 'bf', 'gf'],
+	// 	['mom', 'bf', 'gf'],
+	// 	['parents-christmas', 'bf', 'gf'],
+	// 	['senpai', 'bf', 'gf']
+	// ];
 	var txtWeekTitle:FlxText;
 
 	var curWeek:Int = 0;
@@ -89,6 +117,7 @@ class StoryMenuState extends MusicBeatState
 	override function create()
 	{
 		weekUnlocked = unlockWeeks();
+		weekStuff();
 
 		PlayState.currentSong = "bruh";
 		PlayState.inDaPlay = false;
@@ -140,9 +169,9 @@ class StoryMenuState extends MusicBeatState
 
 		trace("Line 70");
 
-		for (i in 0...weekData().length)
+		for (i in 0...weekData.length)
 		{
-			var weekThing:MenuItem = new MenuItem(0, yellowBG.y + yellowBG.height + 10, i);
+			var weekThing:MenuItem = new MenuItem(0, yellowBG.y + yellowBG.height + 10, weekList[i]);
 			weekThing.y += ((weekThing.height + 20) * i);
 			weekThing.targetY = i;
 			grpWeekText.add(weekThing);
@@ -353,7 +382,7 @@ class StoryMenuState extends MusicBeatState
 				stopspamming = true;
 			}
 
-			PlayState.storyPlaylist = weekData()[curWeek];
+			PlayState.storyPlaylist = weekData[curWeek];
 			PlayState.isStoryMode = true;
 			selectedWeek = true;
 			PlayState.songMultiplier = 1;
@@ -422,10 +451,10 @@ class StoryMenuState extends MusicBeatState
 	{
 		curWeek += change;
 
-		if (curWeek >= weekData().length)
+		if (curWeek >= weekData.length)
 			curWeek = 0;
 		if (curWeek < 0)
-			curWeek = weekData().length - 1;
+			curWeek = weekData.length - 1;
 
 		var bullShit:Int = 0;
 
@@ -451,7 +480,7 @@ class StoryMenuState extends MusicBeatState
 		grpWeekCharacters.members[2].setCharacter(weekCharacters[curWeek][2]);
 
 		txtTracklist.text = "Tracks\n";
-		var stringThing:Array<String> = weekData()[curWeek];
+		var stringThing:Array<String> = weekData[curWeek];
 
 		for (i in stringThing)
 			txtTracklist.text += "\n" + i;
@@ -470,7 +499,7 @@ class StoryMenuState extends MusicBeatState
 
 	public static function unlockNextWeek(week:Int):Void
 	{
-		if (week <= weekData().length - 1 /*&& FlxG.save.data.weekUnlocked == week*/) // fuck you, unlocks all weeks
+		if (week <= weekData.length - 1 /*&& FlxG.save.data.weekUnlocked == week*/) // fuck you, unlocks all weeks
 		{
 			weekUnlocked.push(true);
 			trace('Week ' + week + ' beat (Week ' + (week + 1) + ' unlocked)');
