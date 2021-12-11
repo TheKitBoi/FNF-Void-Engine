@@ -1,8 +1,5 @@
-1.8;
-- New options menu
-- New animation debug screen
-- Middle scroll
-- Lane transparency
-- Added noteskin support + new circle skin
-- Fixed input on rates
-- Fixed rates on longer maps so they are more stable
+1.0.0;
+- Un Hardcoded Weeks
+- Long notes work on downscroll now
+- Sicks are reset per song now
+- A couple of other things I'm probably not aware of
