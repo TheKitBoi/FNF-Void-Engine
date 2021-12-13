@@ -1,0 +1,20 @@
+{
+  "objects": [
+    {
+      "name": "bg",
+      "posX": 400,
+      "posY": 200,
+      "scale": [6, 6],
+      "scrollFactor": [0.8, 0.9],
+      "frames": ["weeb/animatedEvilSchool", "week6"],
+      "startingAnim": "idle",
+      "animations": [
+        {
+          "name": "idle",
+          "prefix": "background 2",
+          "fps": 24
+        }
+      ]
+    }
+  ]
+}

@@ -99,8 +99,8 @@ class StoryMenuState extends MusicBeatState
 
 	override function create()
 	{
-		weekUnlocked = unlockWeeks();
 		weekStuff();
+		weekUnlocked = unlockWeeks();
 
 		PlayState.currentSong = "bruh";
 		PlayState.inDaPlay = false;
